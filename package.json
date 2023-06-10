@@ -1,0 +1,15 @@
+{
+  "name": "notion-mailer",
+  "version": "1.0.0",
+  "description": "Server to automate mailing tasks on notion",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@notionhq/client": "^2.2.5",
+    "dotenv": "^16.1.4"
+  }
+}
