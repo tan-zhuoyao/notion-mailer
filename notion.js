@@ -53,6 +53,9 @@ const getMailContacts = async (notion) => {
   for (const result of results) {
     const { id, properties } = result;
     const { Name, Email } = properties;
+    if (Name.title.length === 0 || !Email.email) {
+      continue;
+    }
     data[id] = {
       "name": Name.title[0].plain_text,
       "email": Email.email
@@ -61,19 +64,18 @@ const getMailContacts = async (notion) => {
   return data;
 }
 
-const updateStatusToDone = (notion, id) => {
-  console.log("Updating " + id + " to done on notion...");
+const updateStatus = (notion, id, status) => {
+  console.log("Updating " + id + " to " + status + " on notion...");
   notion.pages.update({
     page_id: id,
     properties: {
       Status: {
         status: {
-          name: "Done"
+          name: status
         }
       }
     },
   });
-  // TODO: error handling
 }
 
-module.exports = { getNotionDB, getMailContent, getMailContacts, updateStatusToDone };
+module.exports = { getNotionDB, getMailContent, getMailContacts, updateStatus };

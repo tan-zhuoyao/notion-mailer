@@ -19,7 +19,14 @@ const poll = async (notion, transporter) => {
   
   const readyToPublish = mailContent.filter(mail => 
     mail.status === 'Ready to Publish');
-  processMail(readyToPublish, mailContacts, notion, transporter);
+  if (readyToPublish.length === 0) {
+    console.log("No mail to send");
+  } else {
+    console.log("Processing and sending mail...")
+    processMail(readyToPublish, mailContacts, notion, transporter);
+  }
+  
+  console.log("Done process");
   
   setInterval(() => poll(notion, transporter), 1000 * 60);
 }

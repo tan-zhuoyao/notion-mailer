@@ -1,4 +1,4 @@
-const { updateStatusToDone } = require('./notion');
+const { updateStatus } = require('./notion');
 
 const processMail = (mails, mailContacts, notion, transporter) => {
   for (const email of mails) {
@@ -20,10 +20,10 @@ const sendMail = (notion, transporter, recipients, pageId, subject, body) => {
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
       console.log(error);
+      updateStatus(notion, pageId, "Failed")
     } else {
       console.log('Email sent: ' + info.response);
-      // update notion to done
-      updateStatusToDone(notion, pageId);
+      updateStatus(notion, pageId, "Done");
     }
   });
 }
