@@ -21,6 +21,7 @@ const getMailContent = async (notion) => {
   let data = [];
 
   for (const result of results) {
+    const { id } = result;
     const { Subject, Status, Body, Recipients, Attachments } = result.properties;
     const relations = Recipients.relation;
     let ids = [];
@@ -28,11 +29,12 @@ const getMailContent = async (notion) => {
       ids.push(relation.id);
     }
     data.push({
-      "Subject": Subject.title[0].plain_text,
-      "Body": Body.rich_text[0].plain_text,
-      "Recipients": ids,
-      "Attachments": Attachments.files,
-      "Status": Status.status.name,
+      'id': id,
+      "subject": Subject.title[0].plain_text,
+      "body": Body.rich_text[0].plain_text,
+      "recipients": ids,
+      "attachments": Attachments.files,
+      "status": Status.status.name,
     })
   }
 
@@ -59,4 +61,19 @@ const getMailContacts = async (notion) => {
   return data;
 }
 
-module.exports = { getNotionDB, getMailContent, getMailContacts };
+const updateStatusToDone = (notion, id) => {
+  console.log("Updating " + id + " to done on notion...");
+  notion.pages.update({
+    page_id: id,
+    properties: {
+      Status: {
+        status: {
+          name: "Done"
+        }
+      }
+    },
+  });
+  // TODO: error handling
+}
+
+module.exports = { getNotionDB, getMailContent, getMailContacts, updateStatusToDone };
