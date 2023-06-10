@@ -23,6 +23,9 @@ const getMailContent = async (notion) => {
   for (const result of results) {
     const { id } = result;
     const { Subject, Status, Body, Recipients, Attachments } = result.properties;
+    if (Subject.title.length === 0 || Body.rich_text.length === 0 || Recipients.relation.length === 0) {
+      continue;
+    }
     const relations = Recipients.relation;
     let ids = [];
     for (const relation of relations) {
