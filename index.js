@@ -29,7 +29,7 @@ const poll = async (notion, transporter, scheduler) => {
   
   console.log("Done polling process.");
   
-  setTimeout(() => poll(notion, transporter, scheduler), 1000 * 10);
+  setTimeout(() => poll(notion, transporter, scheduler), 1000 * 30);
 }
 
 const transporter = nodemailer.createTransport({
