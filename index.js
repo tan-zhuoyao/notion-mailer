@@ -3,6 +3,7 @@ require('dotenv').config();
 var nodemailer = require('nodemailer');
 
 const { Client } = require("@notionhq/client");
+const { Scheduler } = require("./scheduler");
 const { getNotionDB, getMailContent, getMailContacts  } = require('./notion');
 const { processMail } = require('./mailer');
 
@@ -11,7 +12,8 @@ const notion = new Client({
   auth: process.env.NOTION_SECRET_KEY,
 })
 
-const poll = async (notion, transporter) => {
+const poll = async (notion, transporter, scheduler) => {
+  // console.log(scheduler.getJobs());
   const mailContent = await getMailContent(notion);
   // console.log(mailContent);
   const mailContacts = await getMailContacts(notion);
@@ -22,13 +24,13 @@ const poll = async (notion, transporter) => {
   if (readyToPublish.length === 0) {
     console.log("No mail to send");
   } else {
-    console.log("Processing and sending mail...")
-    processMail(readyToPublish, mailContacts, notion, transporter);
+    console.log("Processing and sending mail...");
+    processMail(readyToPublish, mailContacts, notion, transporter, scheduler);
   }
   
-  console.log("Done process");
+  console.log("Done polling process.");
   
-  setInterval(() => poll(notion, transporter), 1000 * 60);
+  setTimeout(() => poll(notion, transporter, scheduler), 1000 * 60);
 }
 
 const transporter = nodemailer.createTransport({
@@ -39,8 +41,8 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-poll(notion, transporter);
+const scheduler = new Scheduler();
+
+poll(notion, transporter, scheduler);
 // getNotionDB(notion);
-
-
 
