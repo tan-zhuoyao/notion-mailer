@@ -18,18 +18,18 @@ const poll = async (notion, transporter, scheduler) => {
   // console.log(mailContent);
   const mailContacts = await getMailContacts(notion);
   // console.log(mailContacts);
-  const readyToPublish = mailContent.filter(mail => 
-    mail.status === 'Ready to Publish');
-  if (readyToPublish.length === 0) {
+  const filteredMail = mailContent.filter(mail => 
+    mail.status === 'Ready to Publish' || (mail.status === 'Scheduled' && !!mail.date));
+  if (filteredMail.length === 0) {
     console.log("No mail to send");
   } else {
     console.log("Processing and sending mail...");
-    processMail(readyToPublish, mailContacts, notion, transporter, scheduler);
+    processMail(filteredMail, mailContacts, notion, transporter, scheduler);
   }
   
   console.log("Done polling process.");
   
-  setTimeout(() => poll(notion, transporter, scheduler), 1000 * 60);
+  setTimeout(() => poll(notion, transporter, scheduler), 1000 * 10);
 }
 
 const transporter = nodemailer.createTransport({
