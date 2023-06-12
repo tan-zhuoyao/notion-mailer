@@ -14,7 +14,8 @@ const processMail = (mails, mailContacts, notion, transporter, scheduler) => {
       }
       continue;
     }
-    const recipientEmails = recipients.map(e => mailContacts[e].email).join(", ");
+    const recipientEmails = recipients.map(e => mailContacts[e]?.email)
+      .filter(e => !!e).join(", ");
     if (date) {
       console.log("Scheduling mail to: " + recipientEmails);
       const scheduledDate = new Date(date);

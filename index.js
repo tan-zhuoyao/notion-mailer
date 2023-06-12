@@ -18,7 +18,6 @@ const poll = async (notion, transporter, scheduler) => {
   // console.log(mailContent);
   const mailContacts = await getMailContacts(notion);
   // console.log(mailContacts);
-  
   const readyToPublish = mailContent.filter(mail => 
     mail.status === 'Ready to Publish');
   if (readyToPublish.length === 0) {
