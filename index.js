@@ -3,7 +3,7 @@ require('dotenv').config();
 var nodemailer = require('nodemailer');
 
 const { Client } = require("@notionhq/client");
-const { getMailContent, getMailContacts  } = require('./notion');
+const { getNotionDB, getMailContent, getMailContacts  } = require('./notion');
 const { processMail } = require('./mailer');
 
 // Setup Notion client
@@ -40,8 +40,7 @@ const transporter = nodemailer.createTransport({
 });
 
 poll(notion, transporter);
-
-
+// getNotionDB(notion);
 
 
 

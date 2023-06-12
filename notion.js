@@ -5,7 +5,6 @@ const getNotionDB = async (notion) => {
   const res = await notion.databases.retrieve({
     database_id: process.env.MAILING_CONTENT_DATABASE_ID
   });
-  console.log(res)
   return res;
 }
 
@@ -13,7 +12,7 @@ const getMailContent = async (notion) => {
   console.log("Getting mail content...");
   const res = await notion.databases.query({
     database_id: process.env.MAILING_CONTENT_DATABASE_ID,
-    filter_properties: ["title", "YM%3FS", "T%5DIG", "%3C~xq", "vUpz"]
+    filter_properties: ["title", "YM%3FS", "T%5DIG", "%3C~xq", "vUpz", "%3Cgd%40"]
   });
 
   const { results } = res;
@@ -23,6 +22,7 @@ const getMailContent = async (notion) => {
   for (const result of results) {
     const { id } = result;
     const { Subject, Status, Body, Recipients, Attachments } = result.properties;
+    const Date = result.properties["Date Scheduled"].date;
     if (Subject.title.length === 0 || Body.rich_text.length === 0 || Recipients.relation.length === 0) {
       continue;
     }
@@ -38,6 +38,7 @@ const getMailContent = async (notion) => {
       "recipients": ids,
       "attachments": Attachments.files,
       "status": Status.status.name,
+      "date": Date ? Date.start : null,
     })
   }
 
