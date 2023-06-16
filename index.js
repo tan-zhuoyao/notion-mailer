@@ -27,7 +27,6 @@ const poll = async (notion, transporter, scheduler) => {
     console.log("Processing and sending mail...");
     processMail(filteredMail, mailContacts, notion, transporter, scheduler);
   }
-  
   console.log("Done polling process.");
   
   setTimeout(() => poll(notion, transporter, scheduler), 1000 * 30);

@@ -5,14 +5,23 @@ const getNotionDB = async (notion) => {
   const res = await notion.databases.retrieve({
     database_id: process.env.MAILING_CONTENT_DATABASE_ID
   });
-  return res;
+  // Headers of database has to be of the following for this to work
+  const { Attachments, Recipients, Body, Status, Subject} = res.properties;
+  const Date = res.properties['Date Scheduled'];
+  if (!Attachments || !Recipients || !Body || !Status || !Subject || !Date) return;
+  let data = [Attachments, Recipients, Body, Status, Subject, Date];
+  data = data.map(e => e.id);
+  return data;
 }
 
 const getMailContent = async (notion) => {
   console.log("Getting mail content...");
+  const filterId = await getNotionDB(notion);
+  console.log(filterId);
   const res = await notion.databases.query({
     database_id: process.env.MAILING_CONTENT_DATABASE_ID,
-    filter_properties: ["title", "YM%3FS", "T%5DIG", "%3C~xq", "vUpz", "%3Cgd%40"]
+    // dynamically get ID
+    filter_properties: filterId,
   });
 
   const { results } = res;
