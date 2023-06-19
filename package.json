@@ -4,7 +4,7 @@
   "description": "Server to automate mailing tasks on notion",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "start": "node index.js"
   },
   "author": "",
@@ -14,5 +14,8 @@
     "dotenv": "^16.1.4",
     "node-schedule": "^2.1.1",
     "nodemailer": "^6.9.3"
+  },
+  "devDependencies": {
+    "jest": "^29.5.0"
   }
 }

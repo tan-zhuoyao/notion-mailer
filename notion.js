@@ -1,13 +1,13 @@
-const getNotionDB = async (notion) => {
+const getNotionMailingContentDBId = async (notion, id) => {
   console.log("Getting notion database details...");
 
-  // For getting filter_properties
-  const res = await notion.databases.retrieve({
-    database_id: process.env.MAILING_CONTENT_DATABASE_ID
+  // For getting filter_properties, throws error if it fails
+  let res = await notion.databases.retrieve({
+    database_id: id
   });
   // Headers of database has to be of the following for this to work
-  const { Attachments, Recipients, Body, Status, Subject} = res.properties;
-  const Date = res.properties['Date Scheduled'];
+  const { Attachments, Recipients, Body, Status, Subject} = res?.properties;
+  const Date = res?.properties['Date Scheduled'];
   if (!Attachments || !Recipients || !Body || !Status || !Subject || !Date) return;
   let data = [Attachments, Recipients, Body, Status, Subject, Date];
   data = data.map(e => e.id);
@@ -16,8 +16,7 @@ const getNotionDB = async (notion) => {
 
 const getMailContent = async (notion) => {
   console.log("Getting mail content...");
-  const filterId = await getNotionDB(notion);
-  console.log(filterId);
+  const filterId = await getNotionMailingContentDBId(notion, process.env.MAILING_CONTENT_DATABASE_ID);
   const res = await notion.databases.query({
     database_id: process.env.MAILING_CONTENT_DATABASE_ID,
     // dynamically get ID
@@ -91,4 +90,4 @@ const updateStatus = (notion, id, status) => {
   });
 }
 
-module.exports = { getNotionDB, getMailContent, getMailContacts, updateStatus };
+module.exports = { getNotionMailingContentDBId, getMailContent, getMailContacts, updateStatus };

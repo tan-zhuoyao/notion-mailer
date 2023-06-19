@@ -5,7 +5,7 @@ var nodemailer = require('nodemailer');
 const http = require('http');
 const { Client } = require("@notionhq/client");
 const { Scheduler } = require("./scheduler");
-const { getNotionDB, getMailContent, getMailContacts  } = require('./notion');
+const { getNotionMailingContentDB, getMailContent, getMailContacts  } = require('./notion');
 const { processMail } = require('./mailer');
 
 // Setup Notion client
@@ -15,20 +15,23 @@ const notion = new Client({
 
 const poll = async (notion, transporter, scheduler) => {
   // console.log(scheduler.getJobs());
-  const mailContent = await getMailContent(notion);
-  // console.log(mailContent);
-  const mailContacts = await getMailContacts(notion);
-  // console.log(mailContacts);
-  const filteredMail = mailContent.filter(mail => 
-    mail.status === 'Ready to Publish' || (mail.status === 'Scheduled' && !!mail.date));
-  if (filteredMail.length === 0) {
-    console.log("No mail to send");
-  } else {
-    console.log("Processing and sending mail...");
-    processMail(filteredMail, mailContacts, notion, transporter, scheduler);
+  try {
+    const mailContent = await getMailContent(notion);
+    // console.log(mailContent);
+    const mailContacts = await getMailContacts(notion);
+    // console.log(mailContacts);
+    const filteredMail = mailContent.filter(mail =>
+      mail.status === 'Ready to Publish' || (mail.status === 'Scheduled' && !!mail.date));
+    if (filteredMail.length === 0) {
+      console.log("No mail to send");
+    } else {
+      console.log("Processing and sending mail...");
+      processMail(filteredMail, mailContacts, notion, transporter, scheduler);
+    }
+    console.log("Done polling process.");
+  } catch (err) {
+    console.warn(err);
   }
-  console.log("Done polling process.");
-  
   setTimeout(() => poll(notion, transporter, scheduler), 1000 * 30);
 }
 
@@ -56,5 +59,4 @@ server.listen(port, hostname, () => {
 });
 
 poll(notion, transporter, scheduler);
-// getNotionDB(notion);
 
