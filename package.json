@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "Server to automate mailing tasks on notion",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "NODE_ENV=test && node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "start": "node index.js"
   },
   "author": "",
@@ -16,6 +17,8 @@
     "nodemailer": "^6.10.0"
   },
   "devDependencies": {
-    "dotenv": "^16.4.7"
+    "dotenv": "^16.4.7",
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0"
   }
 }

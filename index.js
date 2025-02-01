@@ -5,29 +5,9 @@ import http from "http";
 import { Client } from "@notionhq/client";
 
 import Scheduler from "./scheduler.js";
-import { getMailContent, getMailContacts } from './notion.js';
-import { processMail } from './mailer.js';
 import createTransporter from "./transporter.js";
+import poll from './poll.js';
 
-
-const poll = async (notion, transporter, scheduler) => {
-  // console.log(scheduler.getJobs());
-  const mailContent = await getMailContent(notion);
-  // console.log(mailContent);
-  const mailContacts = await getMailContacts(notion);
-  // console.log(mailContacts);
-  const filteredMail = mailContent.filter(mail => 
-    mail.status === 'Ready to Publish' || (mail.status === 'Scheduled' && !!mail.date));
-  if (filteredMail.length === 0) {
-    console.log("No mail to send");
-  } else {
-    console.log("Processing and sending mail...");
-    processMail(filteredMail, mailContacts, notion, transporter, scheduler);
-  }
-  console.log("Done polling process.");
-  
-  setTimeout(() => poll(notion, transporter, scheduler), 1000 * 30);
-}
 
 // Setup Notion client
 const notion = new Client({
@@ -51,4 +31,7 @@ server.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);
 });
 
-poll(notion, transporter, scheduler);
+if (process.env.NODE_ENV !== "test")
+  poll(notion, transporter, scheduler);
+
+export default server;

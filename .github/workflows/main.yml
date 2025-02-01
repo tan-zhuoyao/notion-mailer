@@ -1,4 +1,4 @@
-name: NPM Clean Install
+name: Build and Test Application
 
 on:
   pull_request:
@@ -16,5 +16,8 @@ jobs:
     - uses: actions/setup-node@v4
       with: 
         node-version: latest
-    - run: npm ci
+    - name: Build application
+      run: npm ci
+    - name: Run tests
+      run: npm test
     
