@@ -17,7 +17,7 @@ const getNotionDB = async (notion) => {
 const getMailContent = async (notion) => {
   console.log("Getting mail content...");
   const filterId = await getNotionDB(notion);
-  console.log(filterId);
+  // console.log(filterId);
   const res = await notion.databases.query({
     database_id: process.env.MAILING_CONTENT_DATABASE_ID,
     // dynamically get ID
@@ -91,4 +91,4 @@ const updateStatus = (notion, id, status) => {
   });
 }
 
-module.exports = { getNotionDB, getMailContent, getMailContacts, updateStatus };
+export { getNotionDB, getMailContent, getMailContacts, updateStatus };
