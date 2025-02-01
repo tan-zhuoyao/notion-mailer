@@ -1,5 +1,5 @@
-const { updateStatus } = require('./notion');
-const schedule = require('node-schedule');
+import { updateStatus } from './notion.js';
+import schedule from 'node-schedule';
 
 // only mail that is "Ready to Publish" OR "Scheduled" with date is filtered here
 const processMail = (mails, mailContacts, notion, transporter, scheduler) => {
@@ -38,7 +38,7 @@ const processMail = (mails, mailContacts, notion, transporter, scheduler) => {
 }
 
 
-const sendMail = (notion, transporter, recipients, pageId, subject, body, scheduler) => {
+const sendMail = async (notion, transporter, recipients, pageId, subject, body, scheduler) => {
   const mailOptions = {
     from: process.env.EMAIL_SENDER,
     to: recipients,
@@ -57,4 +57,4 @@ const sendMail = (notion, transporter, recipients, pageId, subject, body, schedu
   });
 }
 
-module.exports = { processMail, sendMail };
+export { processMail, sendMail };

@@ -1,17 +1,14 @@
-require('dotenv').config();
+import dotenv from "dotenv";
+dotenv.config();
 
-var nodemailer = require('nodemailer');
+import http from "http";
+import { Client } from "@notionhq/client";
 
-const http = require('http');
-const { Client } = require("@notionhq/client");
-const { Scheduler } = require("./scheduler");
-const { getNotionDB, getMailContent, getMailContacts  } = require('./notion');
-const { processMail } = require('./mailer');
+import Scheduler from "./scheduler.js";
+import { getMailContent, getMailContacts } from './notion.js';
+import { processMail } from './mailer.js';
+import createTransporter from "./transporter.js";
 
-// Setup Notion client
-const notion = new Client({
-  auth: process.env.NOTION_SECRET_KEY,
-})
 
 const poll = async (notion, transporter, scheduler) => {
   // console.log(scheduler.getJobs());
@@ -32,13 +29,12 @@ const poll = async (notion, transporter, scheduler) => {
   setTimeout(() => poll(notion, transporter, scheduler), 1000 * 30);
 }
 
-const transporter = nodemailer.createTransport({
-  service: process.env.EMAIL_PROVIDER,
-  auth: {
-    user: process.env.EMAIL_SENDER,
-    pass: process.env.EMAIL_PW
-  }
-});
+// Setup Notion client
+const notion = new Client({
+  auth: process.env.NOTION_SECRET_KEY,
+})
+
+let transporter = await createTransporter();
 
 const scheduler = new Scheduler();
 
@@ -56,5 +52,3 @@ server.listen(port, hostname, () => {
 });
 
 poll(notion, transporter, scheduler);
-// getNotionDB(notion);
-
