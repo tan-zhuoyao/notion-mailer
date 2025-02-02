@@ -35,8 +35,6 @@ jobs:
         npm install -g pm2
         fi
 
-        sudo yum install git
-        
         REPO_URL="https://github.com/tan-zhuoyao/notion-mailer.git"
         BRANCH="main"
         REPO_DIR="$HOME"
