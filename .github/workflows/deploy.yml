@@ -37,7 +37,7 @@ jobs:
 
         REPO_URL="https://github.com/tan-zhuoyao/notion-mailer.git"
         BRANCH="main"
-        REPO_DIR="$HOME"
+        REPO_DIR="$HOME/notion-mailer"
 
         if [ -d "$REPO_DIR/.git" ]; then
           cd "$REPO_DIR"
