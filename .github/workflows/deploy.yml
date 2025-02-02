@@ -47,7 +47,7 @@ jobs:
           cd "$REPO_DIR"
         fi
 
-        cd ~
+        cd "$REPO_DIR"
         git pull origin main
         npm install
 
